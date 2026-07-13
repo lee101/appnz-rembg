@@ -1,6 +1,6 @@
 # appnz-rembg
 
-[![Deploy to app.nz](https://app.nz/deploy-button.svg)](https://app.nz/deploy?image=ghcr.io/lee101/appnz-rembg:latest&name=background-remover&hardware=gpu-t4)
+[![Deploy to app.nz](https://app.nz/deploy-button.svg)](https://app.nz/deploy?image=ghcr.io/lee101/appnz-rembg:latest&name=background-remover&hardware=gpu-rtx3090)
 
 A small, production-oriented [Cog](https://github.com/replicate/cog) wrapper
 around [rembg](https://github.com/danielgatis/rembg). It removes an image
