@@ -11,8 +11,8 @@
 <body><main>
   <div class="eyebrow">Open model · local friendly</div>
   <h1>Cut out any background.</h1>
-  <p>A tiny frontend for the open-source rembg Cog. Deploy the model, paste its app.nz model id here, and this site lives at its own <code>*.app.nz</code> subdomain.</p>
-  <label>Cog model id<input id="model" placeholder="cog model id"></label>
+  <p>A tiny frontend for the open-source rembg Cog, preconfigured against its public app.nz deployment on this <code>*.app.nz</code> subdomain.</p>
+  <label>Cog model id<input id="model" value="ede49fb2-cc51-49fc-8e33-033bb96df7ef" placeholder="cog model id"></label>
   <label>Image<input id="image" type="file" accept="image/*"></label>
   <label>Segmentation model<select id="kind"><option>isnet-general-use</option><option>u2net</option><option>u2netp</option><option>isnet-anime</option><option>birefnet-general</option></select></label>
   <button id="run">Remove background</button>
