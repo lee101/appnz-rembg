@@ -17,7 +17,7 @@
   <label>Segmentation model<select id="kind"><option>isnet-general-use</option><option>u2net</option><option>u2netp</option><option>isnet-anime</option><option>birefnet-general</option></select></label>
   <button id="run">Remove background</button>
   <p id="status" class="hint">Sign in to app.nz in this browser before running.</p>
-  <img id="result" alt="Background removal result" style="max-width:100%;margin-top:18px;border-radius:14px">
+  <img id="result" alt="Background removal result" hidden style="max-width:100%;margin-top:18px;border-radius:14px">
   <script>
     const $ = (id) => document.getElementById(id);
     $('run').onclick = async () => {
@@ -30,7 +30,7 @@
       const body = await response.json();
       if (!response.ok) return $('status').textContent = body.error || 'Request failed';
       $('status').textContent = 'Prediction queued. Open Cog Studio to watch it finish.';
-      if (typeof body.output === 'string') $('result').src = body.output;
+      if (typeof body.output === 'string') { $('result').src = body.output; $('result').hidden = false; }
     };
   </script>
 </main></body>
