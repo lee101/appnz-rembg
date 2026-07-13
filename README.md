@@ -1,50 +1,51 @@
 # appnz-rembg
 
-[![Deploy to app.nz](https://app.nz/deploy-button.svg)](https://app.nz/deploy?image=ghcr.io/lee101/appnz-rembg:latest&name=rembg&hardware=auto)
+[![Deploy to app.nz](https://app.nz/deploy-button.svg)](https://app.nz/deploy?image=ghcr.io/lee101/appnz-rembg:latest&name=background-remover&hardware=gpu-t4)
 
-Background removal with [rembg](https://github.com/danielgatis/rembg)
-(isnet-general-use by default) packaged as an [app.nz cog](https://app.nz):
-a tiny HTTP contract on port 5000 with `POST /predictions` in and a
-transparent PNG data URI out. CPU onnxruntime — small, fast, no GPU needed.
-The default model is baked into the image for fast cold starts; other models
-download on first use.
-
-## Inputs
-
-| name | type | notes |
-|---|---|---|
-| `image` | image | https URL or `data:` URI |
-| `model` | enum | `isnet-general-use` (default), `u2net`, `u2netp`, `isnet-anime`, `birefnet-general` |
-
-Output: `data:image/png;base64,...` with transparent background.
+A small, production-oriented [Cog](https://github.com/replicate/cog) wrapper
+around [rembg](https://github.com/danielgatis/rembg). It removes an image
+background and returns a transparent PNG. The default `isnet-general-use`
+session is baked into the image and kept warm; alternate models load once and
+are reused.
 
 ## Run locally
 
-```bash
-docker run -p 5000:5000 ghcr.io/lee101/appnz-rembg:latest
+Install Docker and Cog, then:
 
+```bash
+cog run -i image=@portrait.jpg -i model=isnet-general-use -o cutout.png
+```
+
+Build and serve the exact HTTP image on your own machine:
+
+```bash
+cog build -t appnz-rembg
+docker run --rm -p 5000:5000 appnz-rembg
 curl -s http://localhost:5000/health-check
-
-curl -s http://localhost:5000/predictions -X POST \
-  -H 'Content-Type: application/json' \
-  -d '{"input": {"image": "https://example.com/photo.jpg"}}' \
-  | python3 -c 'import sys,json,base64; open("out.png","wb").write(base64.b64decode(json.load(sys.stdin)["output"].split(",",1)[1]))'
 ```
 
-## One-click deploy on app.nz
+The container implements Cog's `POST /predictions` contract on port 5000 and
+also runs on any compatible container host; app.nz is optional.
 
-Click the badge above, or open
-`https://app.nz/deploy?image=ghcr.io/lee101/appnz-rembg:latest&name=rembg&hardware=auto`.
-
-## Build
+## Deploy the Cog and its subdomain app
 
 ```bash
-docker build -t ghcr.io/lee101/appnz-rembg:latest .
+app cogs deploy background-remover
+app apps deploy demo --app rembg-demo
+app apps open rembg-demo
 ```
 
-GitHub Actions builds and pushes `ghcr.io/lee101/appnz-rembg:latest` on every
-push to `main`.
+The first command registers the scale-to-zero model. The demo is a dependency-
+free static app served at `https://rembg-demo.app.nz`; enter the deployed Cog id
+in its form. Change the `name` in `demo/appnz.yaml` to claim a different
+subdomain.
 
-## License
+## Test
 
-MIT
+```bash
+python -m unittest discover -s tests -v
+python -m json.tool appnz.schema.json >/dev/null
+```
+
+The adapter is MIT licensed. rembg is MIT; model weights have their own source
+terms and are not redistributed here. See [THIRD_PARTY.md](THIRD_PARTY.md).

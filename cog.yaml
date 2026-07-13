@@ -1,0 +1,12 @@
+build:
+  gpu: false
+  python_version: "3.12"
+  sdk_version: "0.21.0"
+  python_requirements: requirements.txt
+  system_packages:
+    - libgl1
+    - libglib2.0-0
+  run:
+    - python -c "from rembg import new_session; new_session('isnet-general-use')"
+image: ghcr.io/lee101/appnz-rembg:latest
+run: "predict.py:Runner"
