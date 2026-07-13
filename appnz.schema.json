@@ -1,0 +1,7 @@
+{
+  "outputKind": "image",
+  "inputs": [
+    {"name": "image", "type": "image", "description": "Input image", "required": true, "order": 0},
+    {"name": "model", "type": "string", "description": "Segmentation model", "default": "isnet-general-use", "choices": ["isnet-general-use", "u2net", "u2netp", "isnet-anime", "birefnet-general"], "order": 1}
+  ]
+}
